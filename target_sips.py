@@ -19,13 +19,16 @@ current_corpus = initial_corpus
 # formula
 # next_year_corpus = roi*last_corpus + invested that year * roi + invested that year + last_corpus
 # invested next year increases by iyoy
-import pandas as pd
-cols = ['initial_corpus', 'age', 'target', 'XIRR', 'YoY_Increase_in_SIP', 'starting_investment_next_year', 'starting_target_sip_per_month']
-df = pd.DataFrame(columns=cols)
 
 first_year_investment = {}
 index = 1
 for age in target_ages:
+    import pandas as pd
+
+    cols = ['initial_corpus', 'target', 'XIRR', 'YoY_Increase_in_SIP', 'starting_investment_next_year',
+            'starting_target_sip_per_month']
+    df = pd.DataFrame(columns=cols)
+
     first_year_investment[age] = {}
     for target in  target_corpuses:
         first_year_investment[age][target] = {}
@@ -39,6 +42,5 @@ for age in target_ages:
                 SIP_per_month_starting_next_year = round(sum_to_grow/(1+roi+increase)/12,2)
                 print("By the age " + str(age) + " Target " + str(target) + " ROI " + str(roi*100) + "%, increase in SIP YoY " + str(increase * 100) + " investment per year starting 2025 is :- " + str(first_year_investment[age][target][roi][increase]) + " Rupees")
                 print("SIP starting next year :- " + str(SIP_per_month_starting_next_year) + " rupees every month")
-                df.loc[index] = [initial_corpus, age, target, roi, increase,first_year_investment[age][target][roi][increase], SIP_per_month_starting_next_year]
-print(df)
-df.to_csv("investment_strategy.csv", index=False)
+                df.loc[index] = [initial_corpus, target, str(roi*100) + "%", str(increase*100) + "%", first_year_investment[age][target][roi][increase], SIP_per_month_starting_next_year]
+                df.to_csv("Target Age " + str(age) +" investment_strategy.csv", index=False)
